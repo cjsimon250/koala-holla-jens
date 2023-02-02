@@ -1,56 +1,72 @@
-console.log('js');
-
 $(document).ready(function () {
-  console.log('JQ');
-  // Establish Click Listeners
   setupClickListeners();
-  // load existing koalas on page load
   getKoalas();
-  isReadyForTransfer();
-}); // end doc ready
+});
 
 function setupClickListeners() {
-  $('#addButton').on('click', function () {
-    console.log('in addButton on click');
-    // get user input and put in an object
-    // NOT WORKING YET :(
-    // using a test object
-    let koalaToSend = {
-      name: 'testName',
-      age: 'testName',
-      gender: 'testName',
-      readyForTransfer: 'testName',
-      notes: 'testName',
-    };
-    // call saveKoala with the new obejct
-    saveKoala(koalaToSend);
-  });
+  $('#addButton').on('click', postKoala)
 }
 
-function getKoalas() {
-  console.log('in getKoalas');
-  // ajax call to server to get koalas
-} // end getKoalas
+let koalas = [];
 
-function saveKoala(newKoala) {
-  console.log('in saveKoala', newKoala);
-  // ajax call to server to get koalas
-}
-
-// PUT
 function isReadyForTransfer() {
-  // let id = $(this).parents('tr').data('id');
-
-  let id=3;
+  let id = $(this).parents('tr').data('id');
 
   $.ajax({
     url: `/koalas/${id}`,
     method: 'PUT',
     data: {ready_to_transfer: true}
   }).then((response) => {
-    console.log(response);
-    // render();
+    render();
   }).catch((err) => {
     console.error('PUT failed', err);
 });
+
+function getKoalas() {
+  $.ajax({
+    method: "GET",
+    url: "/koalas",
+  }).then((response) => {
+    koalas = response;
+    render();
+  });
+}
+
+function postKoala() {
+  let koalaToSend = {
+    name: $("#nameIn").val(),
+    gender: $("#genderIn").val(),
+    age: $("#ageIn").val(),
+    readyForTransfer: $("#readyForTransferIn").val(),
+    notes: $("#notesIn").val(),
+  };
+
+  $.ajax({
+    method: "POST",
+    url: "/koalas",
+    data: koalaToSend,
+  }).then((response) => {
+      $("#nameIn").val("");
+      $("#genderIn").val("");
+      $("#ageIn").val("");
+      $("#readyForTransferIn").val("");
+      $("#notesIn").val("");
+      getKoalas();
+    });
+
+}
+
+function render() {
+	$("#viewKoalas").empty();
+	for (let koala of koalas) {
+		$("#viewKoalas").append(`
+      <tr data-id='${koala.id}'>
+        <td>${koala.name}</td>
+        <td>${koala.gender}</td>
+        <td>${koala.age}</td>
+        <td>${koala.ready_to_transfer}</td>
+        <td>${koala.notes}</td>
+      </tr>
+    `);
+	}
 }
