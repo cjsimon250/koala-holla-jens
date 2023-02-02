@@ -1,35 +1,25 @@
-console.log("js");
-
 $(document).ready(function () {
-  console.log("JQ");
   setupClickListeners();
-
   getKoalas();
-}); // end doc ready
+});
 
 let koalas = [];
 
 function setupClickListeners() {
-  $("#addButton").on("click", postKoala);
+    $("#addButton").on("click", postKoala);
 }
 
 function getKoalas() {
-  console.log("in getKoalas");
-  // ajax call to server to get koalas
-
   $.ajax({
     method: "GET",
     url: "/koalas",
   }).then((response) => {
     koalas = response;
-
     render();
   });
-} // end getKoalas
+}
 
 function postKoala() {
-  //console.log("in addKoala", newKoala);
-  // ajax call to server to get koalas
   let koalaToSend = {
     name: $("#nameIn").val(),
     gender: $("#genderIn").val(),
@@ -37,8 +27,6 @@ function postKoala() {
     readyForTransfer: $("#readyForTransferIn").val(),
     notes: $("#notesIn").val(),
   };
-
-  console.log(koalaToSend);
 
   $.ajax({
     method: "POST",
@@ -53,4 +41,19 @@ function postKoala() {
 
     getKoalas();
   });
+}
+
+function render() {
+	$("#viewKoalas").empty();
+	for (let koala of koalas) {
+		$("#viewKoalas").append(`
+      <tr data-id='${koala.id}'>
+        <td>${koala.name}</td>
+        <td>${koala.gender}</td>
+        <td>${koala.age}</td>
+        <td>${koala.ready_to_transfer}</td>
+        <td>${koala.notes}</td>
+      </tr>
+    `);
+	}
 }
