@@ -60,7 +60,7 @@ function postKoala() {
   });
 }
 
-//function to delete a book
+//function to delete a koala
 function onDeleteKoala() {
   console.log("in onDeleteKoala");
 
