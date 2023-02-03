@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 function setupClickListeners() {
   $('#addButton').on('click', postKoala);
-  $('.mark-ready-btn').on('click',isReadyForTransfer);
+  $(document).on('click','.mark-ready-btn', isReadyForTransfer);
 }
 
 let koalas = [];
