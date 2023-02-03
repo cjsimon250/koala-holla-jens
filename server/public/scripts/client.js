@@ -4,8 +4,8 @@ $(document).ready(function () {
 });
 
 function setupClickListeners() {
-  $("#addButton").on("click", postKoala);
-
+  $('#addButton').on('click', postKoala);
+  $(document).on('click','.mark-ready-btn', isReadyForTransfer);
   $(document).on("click", '.delete-btn', onDeleteKoala);
 }
 
@@ -16,16 +16,14 @@ function isReadyForTransfer() {
 
   $.ajax({
     url: `/koalas/${id}`,
-
     method: 'PUT',
     data: {ready_to_transfer: true}
   }).then((response) => {
     render();
   }).catch((err) => {
     console.error('PUT failed', err);
-})
-};
-
+  });
+}
 
 function getKoalas() {
   $.ajax({
@@ -60,10 +58,7 @@ function postKoala() {
   });
 }
 
-//function to delete a koala
 function onDeleteKoala() {
-  console.log("in onDeleteKoala");
-
   let id = $(this).parents("tr").data("id");
 
   $.ajax({
