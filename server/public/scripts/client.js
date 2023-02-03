@@ -1,10 +1,13 @@
 $(document).ready(function () {
   setupClickListeners();
   getKoalas();
+
+
 });
 
 function setupClickListeners() {
-  $('#addButton').on('click', postKoala)
+  $('#addButton').on('click', postKoala);
+  $('.mark-ready-btn').on('click',isReadyForTransfer);
 }
 
 let koalas = [];
@@ -21,6 +24,7 @@ function isReadyForTransfer() {
   }).catch((err) => {
     console.error('PUT failed', err);
 });
+}
 
 function getKoalas() {
   $.ajax({
