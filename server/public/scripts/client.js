@@ -4,16 +4,17 @@ $(document).ready(function () {
 });
 
 function setupClickListeners() {
-  $('#addButton').on('click', postKoala)
+  $("#addButton").on("click", postKoala);
 }
 
 let koalas = [];
 
 function isReadyForTransfer() {
-  let id = $(this).parents('tr').data('id');
+  let id = $(this).parents("tr").data("id");
 
   $.ajax({
     url: `/koalas/${id}`,
+
     method: 'PUT',
     data: {ready_to_transfer: true}
   }).then((response) => {
@@ -22,6 +23,7 @@ function isReadyForTransfer() {
     console.error('PUT failed', err);
 })
 };
+
 
 function getKoalas() {
   $.ajax({
@@ -38,7 +40,7 @@ function postKoala() {
     name: $("#nameIn").val(),
     gender: $("#genderIn").val(),
     age: $("#ageIn").val(),
-    readyForTransfer: $("#readyForTransferIn").val(),
+    ready_to_transfer: $("#readyForTransferIn").val(),
     notes: $("#notesIn").val(),
   };
 
@@ -47,20 +49,18 @@ function postKoala() {
     url: "/koalas",
     data: koalaToSend,
   }).then((response) => {
-      $("#nameIn").val("");
-      $("#genderIn").val("");
-      $("#ageIn").val("");
-      $("#readyForTransferIn").val("");
-      $("#notesIn").val("");
-      getKoalas();
-    });
-
+    $("#nameIn").val("");
+    $("#genderIn").val("");
+    $("#ageIn").val("");
+    $("#readyForTransferIn").val("");
+    $("#notesIn").val("");
+    getKoalas();
+  });
 }
 
 function render() {
 	$("#viewKoalas").empty();
 	for (let koala of koalas) {
-		
     if(koala.ready_to_transfer) {
     $("#viewKoalas").append(`
       <tr data-id='${koala.id}'>
@@ -77,7 +77,7 @@ function render() {
         </td>
       </tr>
     `);
-    }
+}
     else {
       $("#viewKoalas").append(`
         <tr data-id='${koala.id}'>
@@ -95,5 +95,6 @@ function render() {
         </tr>
       `);
       }
+
   }
 }
