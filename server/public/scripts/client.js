@@ -14,16 +14,16 @@ function isReadyForTransfer() {
 
   $.ajax({
     url: `/koalas/${id}`,
-    method: "PUT",
-    data: { ready_to_transfer: true },
-  })
-    .then((response) => {
-      render();
-    })
-    .catch((err) => {
-      console.error("PUT failed", err);
-    });
-}
+
+    method: 'PUT',
+    data: {ready_to_transfer: true}
+  }).then((response) => {
+    render();
+  }).catch((err) => {
+    console.error('PUT failed', err);
+})
+};
+
 
 function getKoalas() {
   $.ajax({
@@ -59,16 +59,42 @@ function postKoala() {
 }
 
 function render() {
-  $("#viewKoalas").empty();
-  for (let koala of koalas) {
+	$("#viewKoalas").empty();
+	for (let koala of koalas) {
+    if(koala.ready_to_transfer) {
     $("#viewKoalas").append(`
       <tr data-id='${koala.id}'>
         <td>${koala.name}</td>
         <td>${koala.gender}</td>
         <td>${koala.age}</td>
         <td>${koala.ready_to_transfer}</td>
+        <td>
+          <button class='unready-btn'>Unready</button>
+        </td>
         <td>${koala.notes}</td>
+        <td>
+          <button class='delete-btn'>Delete</button>
+        </td>
       </tr>
     `);
+}
+    else {
+      $("#viewKoalas").append(`
+        <tr data-id='${koala.id}'>
+          <td>${koala.name}</td>
+          <td>${koala.gender}</td>
+          <td>${koala.age}</td>
+          <td>${koala.ready_to_transfer}</td>
+          <td>
+            <button class='mark-ready-btn'>Mark Ready</button>
+          </td>
+          <td>${koala.notes}</td>
+          <td>
+            <button class='delete-btn'>Delete</button>
+          </td>
+        </tr>
+      `);
+      }
+
   }
 }
