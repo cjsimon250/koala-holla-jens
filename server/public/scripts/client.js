@@ -6,7 +6,7 @@ $(document).ready(function () {
 function setupClickListeners() {
   $("#addButton").on("click", postKoala);
 
-  $(".delete-btn").on("click", onDeleteKoala);
+  $(document).on("click", '.delete-btn', onDeleteKoala);
 }
 
 let koalas = [];
