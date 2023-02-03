@@ -5,6 +5,8 @@ $(document).ready(function () {
 
 function setupClickListeners() {
   $("#addButton").on("click", postKoala);
+
+  $(".delete-btn").on("click", onDeleteKoala);
 }
 
 let koalas = [];
@@ -56,6 +58,24 @@ function postKoala() {
     $("#notesIn").val("");
     getKoalas();
   });
+}
+
+//function to delete a koala
+function onDeleteKoala() {
+  console.log("in onDeleteKoala");
+
+  let id = $(this).parents("tr").data("id");
+
+  $.ajax({
+    method: "DELETE",
+    url: `/koalas/${id}`, //generating url on click
+  })
+    .then(() => {
+      getKoalas();
+    })
+    .catch((err) => {
+      console.log("Error in onDeleteKoala", err);
+    });
 }
 
 function render() {
