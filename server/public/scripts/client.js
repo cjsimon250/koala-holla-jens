@@ -1,83 +1,85 @@
 $(document).ready(function () {
-  setupClickListeners();
-  getKoalas();
+	setupClickListeners();
+	getKoalas();
 });
 
 function setupClickListeners() {
-  $('#addButton').on('click', postKoala);
-  $(document).on('click','.mark-ready-btn', isReadyForTransfer);
-  $(document).on("click", '.delete-btn', onDeleteKoala);
+	$("#addButton").on("click", postKoala);
+	$(document).on("click", ".mark-ready-btn", isReadyForTransfer);
+	$(document).on("click", ".delete-btn", onDeleteKoala);
 }
 
 let koalas = [];
 
 function isReadyForTransfer() {
-  let id = $(this).parents("tr").data("id");
+	let id = $(this).parents("tr").data("id");
 
-  $.ajax({
-    url: `/koalas/${id}`,
-    method: 'PUT',
-    data: {ready_to_transfer: true}
-  }).then((response) => {
-    render();
-  }).catch((err) => {
-    console.error('PUT failed', err);
-  });
+	$.ajax({
+		url: `/koalas/${id}`,
+		method: "PUT",
+		data: { ready_to_transfer: true },
+	})
+		.then((response) => {
+			getKoalas();
+		})
+		.catch((err) => {
+			console.error("PUT failed", err);
+		});
 }
 
 function getKoalas() {
-  $.ajax({
-    method: "GET",
-    url: "/koalas",
-  }).then((response) => {
-    koalas = response;
-    render();
-  });
+	$.ajax({
+		method: "GET",
+		url: "/koalas",
+	}).then((response) => {
+		koalas = response;
+		render();
+	});
 }
 
 function postKoala() {
-  let koalaToSend = {
-    name: $("#nameIn").val(),
-    gender: $("#genderIn").val(),
-    age: $("#ageIn").val(),
-    ready_to_transfer: $("#readyForTransferIn").val(),
-    notes: $("#notesIn").val(),
-  };
+	let koalaToSend = {
+		name: $("#nameIn").val(),
+		gender: $("#genderIn").val(),
+		age: $("#ageIn").val(),
+		ready_to_transfer: $("#readyForTransferIn").val(),
+		notes: $("#notesIn").val(),
+	};
 
-  $.ajax({
-    method: "POST",
-    url: "/koalas",
-    data: koalaToSend,
-  }).then((response) => {
-    $("#nameIn").val("");
-    $("#genderIn").val("");
-    $("#ageIn").val("");
-    $("#readyForTransferIn").val("");
-    $("#notesIn").val("");
-    getKoalas();
-  });
+	$.ajax({
+		method: "POST",
+		url: "/koalas",
+		data: koalaToSend,
+	}).then((response) => {
+		$("#nameIn").val("");
+		$("#genderIn").val("");
+		$("#ageIn").val("");
+		$("#readyForTransferIn").val("");
+		$("#notesIn").val("");
+		getKoalas();
+	});
 }
 
 function onDeleteKoala() {
-  let id = $(this).parents("tr").data("id");
+	let id = $(this).parents("tr").data("id");
 
-  $.ajax({
-    method: "DELETE",
-    url: `/koalas/${id}`, //generating url on click
-  })
-    .then(() => {
-      getKoalas();
-    })
-    .catch((err) => {
-      console.log("Error in onDeleteKoala", err);
-    });
+	$.ajax({
+		method: "DELETE",
+		url: `/koalas/${id}`, //generating url on click
+	})
+		.then(() => {
+			getKoalas();
+		})
+		.catch((err) => {
+			console.log("Error in onDeleteKoala", err);
+		});
 }
 
 function render() {
 	$("#viewKoalas").empty();
 	for (let koala of koalas) {
-    if(koala.ready_to_transfer) {
-    $("#viewKoalas").append(`
+		if (koala.ready_to_transfer) {
+			$("#viewKoalas").append(`
       <tr data-id='${koala.id}'>
         <td>${koala.name}</td>
         <td>${koala.gender}</td>
@@ -92,9 +94,8 @@ function render() {
         </td>
       </tr>
     `);
-}
-    else {
-      $("#viewKoalas").append(`
+		} else {
+			$("#viewKoalas").append(`
         <tr data-id='${koala.id}'>
           <td>${koala.name}</td>
           <td>${koala.gender}</td>
@@ -109,7 +110,6 @@ function render() {
           </td>
         </tr>
       `);
-      }
-
-  }
+		}
+	}
 }
